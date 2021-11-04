@@ -67,4 +67,3 @@ def api_complete(uid):
 app.install(CorsPlugin(origins=['http://localhost:8000']))
 
 bottle.run(app, host='localhost', port=5000)
-wqq
