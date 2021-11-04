@@ -1,13 +1,32 @@
-<template>
+<<template>
   <div>
+    <h1>Todos</h1>
     <p>{{ msg }}</p>
+  <table>
+      <thead>
+  <tr>
+      <th>Uid</th>
+      <th>Описание</th>
+      <th>Выполнена?</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(todo, index) in todos" :key="index">
+    <td>{{ todo.uid }}</td>
+    <td>{{ todo.description }}</td>
+    <td>
+    <span v-if="todo.is_completed">Выполнено</span>
+    <span v-else>Не выполнено</span>
+    </td>
+    </tr>
+  </tbody>
+  </table>
   </div>
 </template>
-
 <script>
 import axios from 'axios';
 
-const dataURL = 'https://api.myjson.com/bins/10dxnx';
+const dataURL = 'http://localhost:5000/api/tasks/';
 
 export default {
   name: 'Fetch',
@@ -20,18 +39,13 @@ export default {
     getMessage() {
       axios.get(dataURL)
         .then((response) => {
-          // console.log(response);
-          this.msg = response.data.message;
+          console.table(response.data.tasks);
+          // this.msg = response.data.message;
         });
     },
   },
   created() {
-    // this.getMessage();
-    axios.get(dataURL)
-      .then((response) => {
-        // console.log(response);
-        this.msg = response.data.message;
-      });
+    this.getMessage();
   },
 };
 </script>
