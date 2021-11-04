@@ -1,7 +1,6 @@
 <<template>
   <div>
     <h1>Todos</h1>
-    <p>{{ msg }}</p>
   <table>
       <thead>
   <tr>
@@ -32,14 +31,14 @@ export default {
   name: 'Fetch',
   data() {
     return {
-      msg: 'Запрос ещё не прошёл',
+      todos: [],
     };
   },
   methods: {
     getMessage() {
       axios.get(dataURL)
         .then((response) => {
-          console.table(response.data.tasks);
+          this.todos = response.data.tasks;
           // this.msg = response.data.message;
         });
     },
