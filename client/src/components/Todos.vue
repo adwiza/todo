@@ -78,10 +78,10 @@ h1, td {
 import axios from 'axios';
 
 const todoListURL = 'http://localhost:5000/api/tasks/';
-const todoAddURL = 'http://localhost:5000/api/add_task/';
+const todoAddURL = 'http://localhost:5000/api/add-task/';
 
 export default {
-  name: 'Todos',
+  name: 'Todo',
   data() {
     return {
       todos: [],
@@ -113,11 +113,12 @@ export default {
         .then(() => {
           this.getTodos();
         }),
-      this.resetForm()
+      this.resetForm();
     },
     onReset(event) {
       event.preventDefault();
       this.$refs.addTodoModal.hide();
+      this.resetForm();
     },
   },
   created() {
