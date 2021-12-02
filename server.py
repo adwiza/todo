@@ -43,7 +43,7 @@ def index():
 
 
 @enable_cors
-@bottle.route('/api/tasks, method=['GET', 'POST'])
+@bottle.route('/api/tasks', method=['GET', 'POST'])
 def add_task():
     if bottle.request.method == 'GET':
         tasks = [task.to_dict() for task in tasks_db.values()]
