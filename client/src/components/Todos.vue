@@ -2,8 +2,12 @@
     <div class="container">
         <div class="col-sm-10">
           <h1>Задачи</h1>
-          <button type="button" id="task-add" class="btn-success btn-sm align-left d-
-          block">Добавить задачу</button>
+          <button type="button"
+             id="task-add"
+             class="btn btn-success btn-sm align-left d-block"
+             v-b-modal.todo-modal>
+          Добавить задачу
+          </button>
 
           <table class="table table-dark table-striped table-hover">
             <thread class="thread-light">
@@ -88,7 +92,7 @@ export default {
       addTodoForm: {
         description: '',
         is_completed: [],
-      }
+      },
     };
   },
   methods: {
@@ -103,16 +107,16 @@ export default {
       this.addTodoForm.is_completed = [];
     },
     onSubmit(event) {
-    event.preventDefault();
-    this.$refs.addTodoModal.hide();
-    const requestData = {
-      description: this.addTodoForm.description,
-      is_completed: this.addTodoForm.is_completed[0],
+      event.preventDefault();
+      this.$refs.addTodoModal.hide();
+      const requestData = {
+        description: this.addTodoForm.description,
+        is_completed: this.addTodoForm.is_completed[0],
       };
       axios.post(todoAddURL, requestData)
         .then(() => {
           this.getTodos();
-        }),
+        });
       this.resetForm();
     },
     onReset(event) {
