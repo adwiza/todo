@@ -35,28 +35,43 @@ tasks_db = {
 }
 
 
-@enable_cors
-@app.route('/api/tasks/')
-def index():
-    tasks = [task.to_dict() for task in tasks_db.values()]
-    return {'tasks': tasks}
+# @enable_cors
+# @app.route('/api/tasks/')
+# def index():
+#     tasks = [task.to_dict() for task in tasks_db.values()]
+#     return {'tasks': tasks}
 
-
 @enable_cors
-@bottle.route('/api/tasks', method=['GET', 'POST'])
+@app.route('/api/tasks/', method=['GET', 'POST'])
 def add_task():
     if bottle.request.method == 'GET':
         tasks = [task.to_dict() for task in tasks_db.values()]
         return {'tasks': tasks}
-    elif bottle.method == 'POST':
+    elif bottle.request.method == 'POST':
         desc = bottle.request.json['description']
-        is_completed = bottle.request.json['is_completed']
-    if len(desc) > 0:
-        new_uid = max(tasks_db.keys()) + 1
-        t = TodoItem(desc, new_uid)
-        t.is_completed = is_completed
-        tasks_db[new_uid] = t
-    return 'OK'
+        is_completed = bottle.request.json.get('is_completed', False)
+        if len(desc) > 0:
+            new_uid = max(tasks_db.keys()) + 1
+            t = TodoItem(desc, new_uid)
+            t.is_completed = is_completed
+            tasks_db[new_uid] = t
+        return 'OK'
+
+
+@enable_cors
+@app.route('/api/tasks/<uid:int>', method=['GET', 'PUT', 'DELETE'])
+def show_or_modify_task(uid):
+    if bottle.request.method == 'GET':
+        return tasks_db[uid].to_dict()
+    elif bottle.request.method == 'PUT':
+        if 'description' in bottle.request.json:
+            tasks_db[uid].description = bottle.request.json['description']
+        if 'is_completed' in bottle.request.json:
+            tasks_db[uid].is_completed = bottle.request.json['is_completed']
+        return f'Modified task {uid}'
+    elif bottle.request.method == 'DELETE':
+        tasks_db.pop(uid)
+        return f'Deleted task {uid}'
 
 
 @bottle.route('/api/delete/<uid:int>')
@@ -71,6 +86,6 @@ def api_complete(uid):
     return 'OK'
 
 
-app.install(CorsPlugin(origins=['http://localhost:8000']))
+app.install(CorsPlugin(origins=['http://localhost:8080']))
 
 bottle.run(app, host='localhost', port=5000)
